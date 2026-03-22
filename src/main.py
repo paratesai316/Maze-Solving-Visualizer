@@ -10,7 +10,7 @@ from algorithm.dfs import solve as dfs_solve
 from algorithm.a_star import solve as a_star_solve
 from algorithm.dijkstra import solve as dijkstra_solve
 from algorithm.best_first import solve as best_first_solve
-from algorithm.bidirectional_bfs import solve as bibfs_solve
+from algorithm.uniform_cost import solve as ucs_solve
 
 from maze.generator import generate_maze
 from ui.window import draw_maze
@@ -29,7 +29,7 @@ def reset_algorithms(maze, start, end):
         {"name": "A* Search", "generator": a_star_solve(maze, start, end), "visited": set(), "path": None, "time": 0.0, "status": "Waiting"},
         {"name": "Dijkstra's Algorithm", "generator": dijkstra_solve(maze, start, end), "visited": set(), "path": None, "time": 0.0, "status": "Waiting"},
         {"name": "Greedy Best-First Search", "generator": best_first_solve(maze, start, end), "visited": set(), "path": None, "time": 0.0, "status": "Waiting"},
-        {"name": "Bidirectional BFS", "generator": bibfs_solve(maze, start, end), "visited": set(), "path": None, "time": 0.0, "status": "Waiting"},
+        {"name": "Uniform Cost Search", "generator": ucs_solve(maze, start, end), "visited": set(), "path": None, "time": 0.0, "status": "Waiting"},
     ]
 
 def main():

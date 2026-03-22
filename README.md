@@ -13,7 +13,7 @@ The visualizer includes the following algorithms:
 - A* Search (Manhattan Distance Heuristic)
 - Dijkstra's Algorithm
 - Greedy Best-First Search
-- Bidirectional Breadth-First Search
+- Uniform Cost Search
 
 ## Features
 
