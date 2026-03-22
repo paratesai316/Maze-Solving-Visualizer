@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Solving Visualizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <div class="left-pane">
+            <header>
+                <h1>Maze Solving Visualizer</h1>
+                <p>Simulating 6 intelligent pathfinding algorithms natively in your browser. (Click grids to play/pause).</p>
+            </header>
+            
+            <div class="grid-container" id="canvas-grid">
+            </div>
+            
+            <div class="controls-container">
+                <div class="speed-control">
+                    <label for="speed-slider">Animation Speed:</label>
+                    <input type="range" id="speed-slider" min="1" max="150" value="8">
+                </div>
+                <div class="action-buttons">
+                    <button id="btn-start-all" class="btn primary">Resume / Play All</button>
+                    <button id="btn-stop-all" class="btn secondary">Pause All</button>
+                    <button id="btn-new-maze" class="btn accent">Generate New Maze</button>
+                </div>
+            </div>
+        </div>
+        <div class="right-pane">
+            <h2>Leaderboard</h2>
+            <div class="leaderboard-subtitle">Fastest Time & Shortest Route</div>
+            <div id="leaderboard-list">
+                <div style="color:var(--text-secondary); text-align:center;">Algorithms loading...</div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

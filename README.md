@@ -1,25 +1,26 @@
-# Maze Solving Visualizer
+# Maze Solving Visualizer (Web Edition)
 
 ## Overview
 
-The **Maze Solving Visualizer** is a Python application built with Pygame that visually demonstrates how different pathfinding algorithms behave when solving a maze.
+The **Maze Solving Visualizer** is a high-performance, full-stack web application that visually demonstrates how different Artificial Intelligence pathfinding algorithms behave when navigating a complex labyrinth.
 
-It generates a highly complex, imperfect maze (a "braid" maze containing multiple possible paths to the exit) using Randomized Prim's algorithm. You can then watch six distinct algorithms race simultaneously to see which one finds the exit fastest and which discovers the absolute shortest route.
+It generates a highly intricate, imperfect maze (a "braid" maze containing multiple possible paths to the exit) in Python using Randomized Prim's algorithm. A Flask backend server instantly evaluates all of the algorithms in memory and beautifully streams their coordinates to a sleek, modern HTML/JS frontend. You can watch six distinct algorithms race simultaneously natively in your browser flawlessly at 60 FPS to see which one finds the exit fastest and which one discovers the absolute shortest route!
 
-The visualizer includes the following algorithms:
+The visualizer computes the following 6 algorithms simultaneously:
 
 - Breadth-First Search (BFS)
 - Depth-First Search (DFS)
 - A* Search (Manhattan Distance Heuristic)
 - Dijkstra's Algorithm
 - Greedy Best-First Search
-- Uniform Cost Search
+- Uniform Cost Search (UCS)
 
 ## Features
 
-- **Fullscreen UI**: Immersive Pygame experience with real-time grid updates.
-- **Interactive Controls**: Click on individual maze grids to start or pause them independently, or use the global Start/Stop buttons.
-- **Live Leaderboard**: Tracks execution speed dynamically and explicitly highlights the algorithm that found the shortest route.
+- Modern Web Interface
+- Hardware-Accelerated Canvas Grids
+- Interactive Capabilities
+- Live Leaderboard
 
 ## Prerequisites
 
@@ -29,7 +30,7 @@ The visualizer includes the following algorithms:
 
 1. Clone this repository to your local machine.
 2. Open your terminal or command prompt in the project directory.
-3. Install the required dependencies (Pygame) by running:
+3. Install the required backend dependencies (Flask) by running:
 
    ```bash
    pip install -r requirements.txt
@@ -37,15 +38,19 @@ The visualizer includes the following algorithms:
 
 ## Usage
 
-To start the visualizer, run the following command from the root of the project directory:
+To start the visualizer, run the following command from the root of the project directory to launch the Flask REST server:
 
 ```bash
-python src/main.py
+python src/app.py
 ```
+
+Then, open your preferred web browser and navigate directly to:
+**[http://127.0.0.1:5000/](http://127.0.0.1:5000/)**
 
 ### Controls
 
-- **Click a Maze**: Start or pause that specific algorithm.
-- **Start All / Stop All**: Control all algorithms simultaneously.
-- **New Maze**: Generates a completely new randomized labyrinth.
-- **ESC**: Exit the application.
+- **Animation Speed Slider**: Modifies how many steps of the algorithm iterate per frame (allowing you to visually speed up or slow down the algorithms natively in real-time).
+- **Resume / Play All**: Commences the simultaneous race.
+- **Pause All**: Halts the animation mid-search.
+- **Generate New Maze**: Instructs the Python backend to synthesize a completely new maze dimension and recalculates all routing paths.
+- **Click a Maze Grid**: Optionally, you can click on any individual maze grid to seamlessly pause or resume that specific algorithm independently!

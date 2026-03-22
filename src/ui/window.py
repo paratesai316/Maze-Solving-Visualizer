@@ -1,7 +1,6 @@
 import pygame
 import math
 
-# Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 YELLOW = (255, 255, 51)
@@ -12,11 +11,9 @@ GRAY = (220, 220, 220)
 DARK_GRAY = (150, 150, 150)
 
 def draw_maze(surface, rect, maze, title, visited, path, time_taken=None, status="Running", font=None):
-    # rect is the pygame.Rect where this maze should be drawn
-    surface.fill(GRAY, rect) # Background for the section
-    pygame.draw.rect(surface, DARK_GRAY, rect, 2) # Border for the section
+    surface.fill(GRAY, rect)
+    pygame.draw.rect(surface, DARK_GRAY, rect, 2)
     
-    # Draw title and status
     if font:
         title_surf = font.render(title, True, BLACK)
         surface.blit(title_surf, (rect.x + 10, rect.y + 5))
@@ -29,7 +26,6 @@ def draw_maze(surface, rect, maze, title, visited, path, time_taken=None, status
         status_surf = font.render(status_text, True, BLACK)
         surface.blit(status_surf, (rect.x + 10, rect.y + 25))
 
-    # Maze drawing area
     maze_rect = pygame.Rect(rect.x + 10, rect.y + 50, rect.width - 20, rect.height - 60)
     
     rows = len(maze)
@@ -37,8 +33,6 @@ def draw_maze(surface, rect, maze, title, visited, path, time_taken=None, status
     cell_w = maze_rect.width / cols
     cell_h = maze_rect.height / rows
     
-    # To optimize rendering, we don't draw every single cell outline. 
-    # We draw the background as WHITE and only draw walls and visited/path cells.
     pygame.draw.rect(surface, WHITE, maze_rect)
     
     for r in range(rows):
@@ -54,7 +48,6 @@ def draw_maze(surface, rect, maze, title, visited, path, time_taken=None, status
             elif visited and (c, r) in visited:
                 color = YELLOW
                 
-            # Start and End colors
             if (c, r) == (1, 1):
                 color = BLUE
             elif (c, r) == (cols - 2, rows - 2):
@@ -63,4 +56,4 @@ def draw_maze(surface, rect, maze, title, visited, path, time_taken=None, status
             if color is not None:
                 pygame.draw.rect(surface, color, (x, y, math.ceil(cell_w), math.ceil(cell_h)))
             
-    pygame.draw.rect(surface, BLACK, maze_rect, 2) # Border around maze
+    pygame.draw.rect(surface, BLACK, maze_rect, 2)
