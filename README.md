@@ -7,7 +7,7 @@
 The app features two modes:
 
 1. **Maze Solver** — Watch 6 algorithms race through a procedurally generated maze simultaneously, with a live leaderboard tracking the fastest and shortest path.
-2. **Real-World Navigation** — Click any two points on an interactive OpenStreetMap and find the driving route between them, demonstrating how the same graph-search algorithms power real navigation systems.
+2. **Real-World Navigation** — Click any two points on an interactive OpenStreetMap to visualize real-time pathfinding on actual street networks. It dynamically fetches real OpenStreetMap road data via the Overpass API to demonstrate how the same graph-search algorithms power real-world navigation systems.
 
 ## Algorithms
 
@@ -29,18 +29,18 @@ The app features two modes:
 - **Speed Slider** — Control animation speed in real-time
 - **Instant Maze Generation** — Generate new mazes with one click
 
-### Real-World Navigation Tab
-- **Interactive OpenStreetMap** powered by Leaflet.js
-- **Click-to-place** start (blue) and destination (pink) markers
-- **Draggable markers** — Reposition points after placing them
-- **Route computation** via OSRM (Open Source Routing Machine)
-- **Route Details panel** — Shows distance (km), estimated time, and selected algorithm
-- **Algorithm selector** — Choose which pathfinding algorithm conceptually powers the route
-- **Clear & retry** — Reset markers and try different locations
+### Real-World Navigation Tab (New Updates)
+- **Dynamic OSM Routing Engine**: Replaced basic routing with a custom robust graph-based pathfinding engine.
+- **Overpass API Integration**: Fetches real road data dynamically within a bounded box and constructs a weighted adjacency-list graph directly in memory.
+- **Multiple Supported Algorithms**: Visualize real-world pathfinding using custom Python implementations of BFS, DFS, Dijkstra, A*, Greedy Best-First, and UCS over actual street configurations.
+- **Interactive Map**: Powered by Leaflet.js with click-to-place start (blue) and destination (pink) markers. 
+- **Draggable Markers**: Reposition points after placing them, automatically snapping to the nearest valid road nodes.
+- **Detailed Analytics Panel**: View detailed execution stats including path distance (km), execution time, total visited edges during the search, and total road network nodes dynamically.
 
 ## Prerequisites
 
 - Python 3.6+
+- Active internet connection (for Overpass API and Leaflet Maps visualization)
 
 ## Installation
 
@@ -50,10 +50,20 @@ The app features two modes:
    cd Maze-Solving-Visualizer
    ```
 
-2. Install dependencies:
+2. Create a virtual environment (Optional but Recommended):
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows use: venv\Scripts\activate
+   ```
+
+3. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
+   **Dependencies overview:**
+   - `Flask` (Backend Web Framework)
+   - `requests` (Fetching Overpass API data for map navigation)
+   - `pygame` (Internal dependency)
 
 ## Usage
 
@@ -63,7 +73,7 @@ Start the Flask server:
 python src/app.py
 ```
 
-Open your browser and go to: **[http://127.0.0.1:5000/](http://127.0.0.1:5000/)**
+Open your browser and navigate to: **[http://127.0.0.1:5000/](http://127.0.0.1:5000/)**
 
 ### Controls — Maze Solver
 
@@ -82,15 +92,15 @@ Open your browser and go to: **[http://127.0.0.1:5000/](http://127.0.0.1:5000/)*
 |---|---|
 | **Click map** | Place start point (1st click) then destination (2nd click) |
 | **Drag markers** | Reposition start/end after placement |
-| **Algorithm dropdown** | Select which algorithm to use |
-| **Find Route** | Compute and display the driving route |
-| **Clear** | Remove markers, route, and results |
+| **Algorithm dropdown** | Select which algorithm (A*, BFS, DFS, etc.) to use |
+| **Find Route** | Computes paths by pulling live OSM data, building graphs, and executing the chosen algorithm |
+| **Clear** | Remove markers, route layer, and results |
 
 ## Tech Stack
 
-- **Backend**: Python, Flask
+- **Backend**: Python, Flask, Custom Graph Pathfinding Engine
 - **Frontend**: HTML5 Canvas, Vanilla CSS, Vanilla JS
+- **API Integrations**: Overpass API for real-time map/graph road data
+- **Mapping**: Leaflet.js + OpenStreetMap tiles
 - **Maze Generation**: Randomized Prim's Algorithm
-- **Mapping**: Leaflet.js + OpenStreetMap
-- **Routing**: OSRM (Open Source Routing Machine)
 - **Typography**: DM Sans, JetBrains Mono
