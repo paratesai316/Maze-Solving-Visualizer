@@ -1,26 +1,42 @@
-# Maze Solving Visualizer (Web Edition)
+# PathViz — AI Pathfinding Visualizer
 
 ## Overview
 
-The **Maze Solving Visualizer** is a high-performance, full-stack web application that visually demonstrates how different Artificial Intelligence pathfinding algorithms behave when navigating a complex labyrinth.
+**PathViz** is a full-stack web application that visually demonstrates how different AI pathfinding algorithms work — both in abstract maze environments and on real-world maps.
 
-It generates a highly intricate, imperfect maze (a "braid" maze containing multiple possible paths to the exit) in Python using Randomized Prim's algorithm. A Flask backend server instantly evaluates all of the algorithms in memory and beautifully streams their coordinates to a sleek, modern HTML/JS frontend. You can watch six distinct algorithms race simultaneously natively in your browser flawlessly at 60 FPS to see which one finds the exit fastest and which one discovers the absolute shortest route!
+The app features two modes:
 
-The visualizer computes the following 6 algorithms simultaneously:
+1. **Maze Solver** — Watch 6 algorithms race through a procedurally generated maze simultaneously, with a live leaderboard tracking the fastest and shortest path.
+2. **Real-World Navigation** — Click any two points on an interactive OpenStreetMap and find the driving route between them, demonstrating how the same graph-search algorithms power real navigation systems.
 
-- Breadth-First Search (BFS)
-- Depth-First Search (DFS)
-- A* Search (Manhattan Distance Heuristic)
-- Dijkstra's Algorithm
-- Greedy Best-First Search
-- Uniform Cost Search (UCS)
+## Algorithms
+
+| Algorithm | Optimal? | Strategy |
+|---|---|---|
+| Breadth-First Search (BFS) | ✅ | Explores all neighbors level by level |
+| Depth-First Search (DFS) | ❌ | Dives deep before backtracking |
+| A* Search | ✅ | Uses Manhattan distance heuristic + cost |
+| Dijkstra's Algorithm | ✅ | Expands lowest cumulative cost node |
+| Greedy Best-First Search | ❌ | Expands node closest to goal (heuristic only) |
+| Uniform Cost Search (UCS) | ✅ | Expands lowest path-cost node |
 
 ## Features
 
-- Modern Web Interface
-- Hardware-Accelerated Canvas Grids
-- Interactive Capabilities
-- Live Leaderboard
+### Maze Solver Tab
+- **6 simultaneous algorithm visualizations** on crisp HTML5 Canvas grids
+- **Focus Mode** — Click any algorithm card to expand it full-screen with dedicated Play / Pause / Reset controls and live stats (visited cells, path length, execution time)
+- **Live Leaderboard** — Ranks algorithms by speed with ⚡ Fastest and ★ Shortest badges
+- **Speed Slider** — Control animation speed in real-time
+- **Instant Maze Generation** — Generate new mazes with one click
+
+### Real-World Navigation Tab
+- **Interactive OpenStreetMap** powered by Leaflet.js
+- **Click-to-place** start (blue) and destination (pink) markers
+- **Draggable markers** — Reposition points after placing them
+- **Route computation** via OSRM (Open Source Routing Machine)
+- **Route Details panel** — Shows distance (km), estimated time, and selected algorithm
+- **Algorithm selector** — Choose which pathfinding algorithm conceptually powers the route
+- **Clear & retry** — Reset markers and try different locations
 
 ## Prerequisites
 
@@ -28,29 +44,53 @@ The visualizer computes the following 6 algorithms simultaneously:
 
 ## Installation
 
-1. Clone this repository to your local machine.
-2. Open your terminal or command prompt in the project directory.
-3. Install the required backend dependencies (Flask) by running:
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/your-username/Maze-Solving-Visualizer.git
+   cd Maze-Solving-Visualizer
+   ```
 
+2. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
 ## Usage
 
-To start the visualizer, run the following command from the root of the project directory to launch the Flask REST server:
+Start the Flask server:
 
 ```bash
 python src/app.py
 ```
 
-Then, open your preferred web browser and navigate directly to:
-**[http://127.0.0.1:5000/](http://127.0.0.1:5000/)**
+Open your browser and go to: **[http://127.0.0.1:5000/](http://127.0.0.1:5000/)**
 
-### Controls
+### Controls — Maze Solver
 
-- **Animation Speed Slider**: Modifies how many steps of the algorithm iterate per frame (allowing you to visually speed up or slow down the algorithms natively in real-time).
-- **Resume / Play All**: Commences the simultaneous race.
-- **Pause All**: Halts the animation mid-search.
-- **Generate New Maze**: Instructs the Python backend to synthesize a completely new maze dimension and recalculates all routing paths.
-- **Click a Maze Grid**: Optionally, you can click on any individual maze grid to seamlessly pause or resume that specific algorithm independently!
+| Control | Action |
+|---|---|
+| **Play All** | Start all 6 algorithms simultaneously |
+| **Pause** | Pause all running algorithms |
+| **New Maze** | Generate a fresh maze and reset |
+| **Speed Slider** | Adjust animation steps per frame |
+| **Click a card** | Enter Focus Mode for that algorithm |
+| **Back to all** | Exit Focus Mode and return to the grid |
+
+### Controls — Real-World Navigation
+
+| Control | Action |
+|---|---|
+| **Click map** | Place start point (1st click) then destination (2nd click) |
+| **Drag markers** | Reposition start/end after placement |
+| **Algorithm dropdown** | Select which algorithm to use |
+| **Find Route** | Compute and display the driving route |
+| **Clear** | Remove markers, route, and results |
+
+## Tech Stack
+
+- **Backend**: Python, Flask
+- **Frontend**: HTML5 Canvas, Vanilla CSS, Vanilla JS
+- **Maze Generation**: Randomized Prim's Algorithm
+- **Mapping**: Leaflet.js + OpenStreetMap
+- **Routing**: OSRM (Open Source Routing Machine)
+- **Typography**: DM Sans, JetBrains Mono

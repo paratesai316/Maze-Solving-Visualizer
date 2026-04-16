@@ -76,5 +76,23 @@ def solve():
     
     return jsonify(results)
 
+@app.route("/map_solve", methods=["POST"])
+def map_solve():
+    """Run a pathfinding algorithm on real OpenStreetMap road data."""
+    from graph.osm_graph import solve as osm_solve
+
+    data = request.json
+    start_ll = data["start"]      # [lat, lng]
+    end_ll = data["end"]          # [lat, lng]
+    algo_key = data.get("algorithm", "a_star")
+
+    try:
+        result = osm_solve(start_ll, end_ll, algo_key)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    return jsonify(result)
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
+
