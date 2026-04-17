@@ -1,22 +1,14 @@
 {
   "builds": [
     {
-      "src": "src/app.py",
+      "src": "api/index.py",
       "use": "@vercel/python"
-    },
-    {
-      "src": "src/static/**",
-      "use": "@vercel/static"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/static/(.*)",
-      "dest": "src/static/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "src/app.py"
+      "source": "/(.*)",
+      "destination": "/api/index"
     }
   ]
 }
