@@ -57,8 +57,24 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
         if (tab.dataset.tab === 'map' && window.navMap) {
             setTimeout(() => window.navMap.invalidateSize(), 100);
         }
+        // Close mobile nav menu on tab click
+        const navTabs = document.getElementById('nav-tabs');
+        const hamburger = document.getElementById('nav-hamburger');
+        if (navTabs) navTabs.classList.remove('open');
+        if (hamburger) hamburger.classList.remove('active');
     });
 });
+
+/* ---- Mobile Hamburger Toggle ---- */
+(function initHamburger() {
+    const hamburger = document.getElementById('nav-hamburger');
+    const navTabs = document.getElementById('nav-tabs');
+    if (!hamburger || !navTabs) return;
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navTabs.classList.toggle('open');
+    });
+})();
 
 /* ---- Theme-aware color getter ---- */
 function getThemeColors() {

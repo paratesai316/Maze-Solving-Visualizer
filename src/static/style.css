@@ -969,10 +969,248 @@ canvas {
 /* Hide LRM's built-in itinerary panel */
 .leaflet-routing-container { display: none !important; }
 
-/* ---- Responsive ---- */
+/* ---- Hamburger Button (hidden on desktop) ---- */
+.nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: var(--r);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+.nav-hamburger span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--nav-text);
+    transition: all 0.25s ease;
+    transform-origin: center;
+}
+.nav-hamburger:hover {
+    border-color: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.06);
+}
+.nav-hamburger.active span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+}
+.nav-hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+.nav-hamburger.active span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+}
+
+/* ---- Responsive: Tablet ≤ 1100px ---- */
 @media (max-width: 1100px) {
     .sidebar { width: 260px; padding: 16px; }
     .map-sidebar { width: 280px; padding: 16px; }
+}
+
+/* ---- Responsive: Small Tablet / Landscape Phone ≤ 768px ---- */
+@media (max-width: 768px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+        overflow: auto;
+        overflow-x: hidden;
+    }
+
+    /* -- Nav -- */
+    .main-nav {
+        flex-wrap: wrap;
+        height: auto;
+        min-height: 52px;
+        padding: 10px 14px;
+        gap: 10px;
+    }
+    .nav-hamburger { display: flex; }
+    .nav-right { margin-left: auto; order: 0; }
+    .nav-tabs {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        order: 10;
+        gap: 2px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .nav-tabs.open { display: flex; }
+    .nav-tab {
+        padding: 12px 14px;
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .nav-tab::after { display: none; }
+    .nav-tab.active {
+        background: rgba(255,255,255,0.1);
+        border-left: 3px solid var(--accent-primary);
+    }
+
+    /* -- Tab Panels -- */
+    .tab-panel {
+        height: auto;
+        min-height: calc(100vh - 52px);
+        overflow: visible;
+    }
+
+    /* -- App Shell: Stack vertically -- */
+    .app-shell {
+        flex-direction: column;
+        height: auto;
+        min-height: 0;
+    }
+
+    .workspace {
+        padding: 12px;
+        min-height: 0;
+        flex: none;
+    }
+
+    /* -- Top Bar -- */
+    .top-bar {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .brand h1 { font-size: 1.15rem; }
+    .subtitle { font-size: 0.72rem; }
+
+    /* -- Grid: 2 columns -- */
+    .grid-container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: repeat(3, minmax(180px, 1fr));
+        gap: 8px;
+        min-height: 560px;
+        margin-bottom: 10px;
+    }
+
+    /* -- Bottom Bar -- */
+    .bottom-bar {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px 14px;
+    }
+    .speed-group input[type="range"] { width: 100px; }
+
+    /* -- Sidebar: Horizontal at bottom -- */
+    .sidebar {
+        width: 100%;
+        flex-shrink: 0;
+        border-left: none;
+        border-top: 2px solid var(--border-1);
+        padding: 16px 12px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    .leaderboard-scroll { max-height: 180px; }
+    .legend { flex-wrap: wrap; gap: 10px; }
+
+    /* -- Focus Mode -- */
+    .focus-top {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .focus-stats {
+        margin-left: 0;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .focus-canvas-wrap {
+        min-height: 250px;
+    }
+    .focus-controls {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px 12px;
+    }
+    .focus-controls .speed-group { flex: 1 1 100%; }
+    .focus-controls .action-group { flex: 1 1 100%; justify-content: flex-end; }
+
+    /* -- Map Shell: Stack vertically -- */
+    .map-shell {
+        flex-direction: column;
+        height: auto;
+        min-height: calc(100vh - 52px);
+    }
+    .map-container {
+        min-height: 350px;
+        height: 50vh;
+        flex: none;
+    }
+    .map-sidebar {
+        width: 100%;
+        border-left: none;
+        border-top: 2px solid var(--border-1);
+        padding: 16px 12px;
+        flex: none;
+    }
+}
+
+/* ---- Responsive: Portrait Phone ≤ 480px ---- */
+@media (max-width: 480px) {
+    .main-nav { padding: 8px 10px; }
+    .nav-title { font-size: 0.95rem; }
+    .nav-brand .brand-icon { width: 26px; height: 26px; }
+    .nav-brand .brand-icon svg { width: 14px; height: 14px; }
+
+    .workspace { padding: 8px; }
+
+    /* -- Top Bar -- */
+    .top-bar { margin-bottom: 10px; }
+    .brand h1 { font-size: 1rem; }
+    .subtitle { font-size: 0.68rem; }
+    .btn { padding: 6px 10px; font-size: 0.75rem; }
+
+    /* -- Grid: 1 column -- */
+    .grid-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(6, minmax(180px, 1fr));
+        gap: 8px;
+        min-height: 0;
+    }
+
+    .algo-card { padding: 8px 10px 10px; }
+    .algo-title { font-size: 0.82rem; }
+    .algo-badge { font-size: 0.6rem; padding: 2px 6px; }
+    .algo-time { font-size: 0.68rem; }
+
+    /* -- Bottom Bar -- */
+    .bottom-bar { padding: 8px 10px; }
+    .speed-group { font-size: 0.75rem; gap: 6px; }
+    .speed-group input[type="range"] { width: 80px; }
+    .action-group { gap: 6px; }
+
+    /* -- Sidebar -- */
+    .sidebar { padding: 12px 10px; max-height: 260px; }
+    .sidebar-header h2 { font-size: 1rem; }
+    .sidebar-sub { font-size: 0.72rem; }
+    .lb-name { font-size: 0.8rem; }
+    .lb-stats { font-size: 0.7rem; gap: 10px; margin-left: 20px; }
+
+    /* -- Focus Mode -- */
+    .focus-top { gap: 8px; }
+    .focus-info h2 { font-size: 1rem; }
+    .focus-stat { font-size: 0.7rem; padding: 4px 8px; }
+    .focus-canvas-wrap { min-height: 200px; }
+    .focus-controls { padding: 8px 10px; }
+
+    /* -- Map -- */
+    .map-container { height: 40vh; min-height: 280px; }
+    .map-sidebar { padding: 14px 10px; gap: 12px; }
+    .map-sidebar h2 { font-size: 1rem; }
+    .map-sidebar-sub { font-size: 0.75rem; }
+    .map-btn-route { padding: 10px; font-size: 0.82rem; }
+    .map-btn-clear { padding: 8px; font-size: 0.78rem; }
+    .result-label { font-size: 0.72rem; }
+    .result-value { font-size: 0.78rem; }
+    .map-instructions h3 { font-size: 0.75rem; }
+    .map-instructions p { font-size: 0.72rem; }
 }
 
 /* ============================================================
