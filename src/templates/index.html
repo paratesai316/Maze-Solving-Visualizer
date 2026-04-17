@@ -1,39 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maze Solver — AI Pathfinding Visualizer</title>
-    <meta name="description" content="Visualize 6 AI pathfinding algorithms racing through complex mazes in real-time, and see pathfinding applied to real-world navigation.">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=6">
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <meta name="description"
+        content="Visualize 6 AI pathfinding algorithms racing through complex mazes in real-time, and see pathfinding applied to real-world navigation.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=7">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@300;400;500;700;800&display=swap"
+        rel="stylesheet">
     <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
+
 <body>
     <!-- ===== Navigation Bar ===== -->
     <nav class="main-nav" id="main-nav">
+        <!-- SVG Noise Texture Overlay -->
+        <svg class="nav-noise" xmlns="http://www.w3.org/2000/svg">
+            <filter id="noiseFilter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" stitchTiles="stitch" />
+            </filter>
+            <rect width="100%" height="100%" filter="url(#noiseFilter)" fill="white" />
+        </svg>
+
         <div class="nav-brand">
             <div class="brand-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-                    <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
                 </svg>
             </div>
-            <span class="nav-title">PathViz</span>
+            <span class="nav-title">PathMind</span>
+            <span class="pulse-dot"></span>
         </div>
         <div class="nav-tabs">
             <button class="nav-tab active" data-tab="maze">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 3v18"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="0" />
+                    <path d="M3 9h18" />
+                    <path d="M9 3v18" />
+                </svg>
                 Maze Solver
             </button>
             <button class="nav-tab" data-tab="map">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                </svg>
                 Real-World Navigation
             </button>
         </div>
-        <div class="nav-right"></div>
+        <div class="nav-right">
+            <button class="theme-toggle" id="theme-toggle" title="Toggle dark mode">☀</button>
+        </div>
     </nav>
 
     <!-- ===== Tab 1: Maze Solver ===== -->
@@ -49,7 +75,13 @@
                     </div>
                     <div class="top-actions">
                         <button id="btn-new-maze" class="btn btn-outline" title="Generate a new maze">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 2v6h-6" />
+                                <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+                                <path d="M3 22v-6h6" />
+                                <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+                            </svg>
                             New Maze
                         </button>
                     </div>
@@ -61,7 +93,11 @@
                 <div class="focus-view hidden" id="focus-view">
                     <div class="focus-top">
                         <button class="btn btn-outline" id="focus-back">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 12H5" />
+                                <path d="M12 19l-7-7 7-7" />
+                            </svg>
                             Back to all
                         </button>
                         <div class="focus-info">
@@ -79,22 +115,38 @@
                     </div>
                     <div class="focus-controls">
                         <div class="speed-group">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3" />
+                            </svg>
                             <label>Speed</label>
                             <input type="range" id="focus-speed" min="1" max="150" value="8">
                             <span class="speed-val" id="focus-speed-val">8</span>
                         </div>
                         <div class="action-group">
                             <button class="btn btn-play" id="focus-play">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5">
+                                    <polygon points="5 3 19 12 5 21 5 3" />
+                                </svg>
                                 Play
                             </button>
                             <button class="btn btn-pause" id="focus-pause">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5">
+                                    <rect x="6" y="4" width="4" height="16" />
+                                    <rect x="14" y="4" width="4" height="16" />
+                                </svg>
                                 Pause
                             </button>
                             <button class="btn btn-outline" id="focus-reset">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 2v6h-6" />
+                                    <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+                                    <path d="M3 22v-6h6" />
+                                    <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+                                </svg>
                                 Reset
                             </button>
                         </div>
@@ -103,18 +155,28 @@
 
                 <footer class="bottom-bar">
                     <div class="speed-group">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3" />
+                        </svg>
                         <label for="speed-slider">Speed</label>
                         <input type="range" id="speed-slider" min="1" max="150" value="8">
                         <span class="speed-val" id="speed-val">8</span>
                     </div>
                     <div class="action-group">
-                        <button id="btn-start-all" class="btn btn-play">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                            Play All
+                        <button id="btn-start-all" class="btn btn-solve">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <polygon points="5 3 19 12 5 21 5 3" />
+                            </svg>
+                            Solve
                         </button>
                         <button id="btn-stop-all" class="btn btn-pause">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <rect x="6" y="4" width="4" height="16" />
+                                <rect x="14" y="4" width="4" height="16" />
+                            </svg>
                             Pause
                         </button>
                     </div>
@@ -128,12 +190,12 @@
                 </div>
                 <p class="sidebar-sub">Ranked by execution speed</p>
                 <div class="leaderboard-scroll" id="leaderboard-list">
-                    <div class="leaderboard-empty">Click <strong>Play All</strong> to start the race.</div>
+                    <div class="leaderboard-empty">Click <strong>Solve</strong> to start the race.</div>
                 </div>
                 <div class="sidebar-footer">
                     <div class="legend">
-                        <div class="legend-item"><span class="swatch" style="background:#fbbf24"></span> Fastest</div>
-                        <div class="legend-item"><span class="swatch" style="background:#34d399"></span> Shortest Route</div>
+                        <div class="legend-item"><span class="swatch" id="swatch-fastest"></span> Fastest</div>
+                        <div class="legend-item"><span class="swatch" id="swatch-shortest"></span> Shortest Route</div>
                     </div>
                 </div>
             </aside>
@@ -146,7 +208,8 @@
             <div class="map-container" id="map-container"></div>
             <aside class="map-sidebar">
                 <h2>Real-World Pathfinding</h2>
-                <p class="map-sidebar-sub">Click two points on the map to set start &amp; destination, then find the optimal route using a pathfinding algorithm.</p>
+                <p class="map-sidebar-sub">Click two points on the map to set start &amp; destination, then find the
+                    optimal route using a pathfinding algorithm.</p>
 
                 <div class="map-field">
                     <label class="field-label">Algorithm</label>
@@ -162,7 +225,7 @@
 
                 <div class="map-field">
                     <label class="field-label">
-                        <span class="swatch" style="background:#60a5fa;width:10px;height:10px"></span>
+                        <span class="swatch" style="background:var(--clr-go);width:10px;height:10px"></span>
                         Start Point
                     </label>
                     <div class="coord-display" id="map-start-display">Click on the map</div>
@@ -170,18 +233,24 @@
 
                 <div class="map-field">
                     <label class="field-label">
-                        <span class="swatch" style="background:#fb7185;width:10px;height:10px"></span>
+                        <span class="swatch" style="background:var(--clr-stop);width:10px;height:10px"></span>
                         Destination
                     </label>
                     <div class="coord-display" id="map-end-display">Click a second point</div>
                 </div>
 
-                <button class="btn btn-play map-btn-route" id="map-find-route" disabled>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                <button class="btn btn-solve map-btn-route" id="map-find-route" disabled>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14" />
+                        <path d="M12 5l7 7-7 7" />
+                    </svg>
                     Find Route
                 </button>
                 <button class="btn btn-outline map-btn-clear" id="map-clear">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18" />
+                        <path d="M6 6l12 12" />
+                    </svg>
                     Clear
                 </button>
 
@@ -209,15 +278,20 @@
 
                 <div class="map-instructions">
                     <h3>How it works</h3>
-                    <p>Real road data is fetched from OpenStreetMap for the area between your points. A graph is built where intersections are nodes and street segments are weighted edges.</p>
-                    <p>The selected algorithm runs on this real road graph — <strong style="color:#94a3b8">gray lines show the road network</strong>, <strong style="color:#fbbf24">yellow shows edges explored</strong>, <strong style="color:#34d399">green shows the final path</strong>.</p>
+                    <p>Real road data is fetched from OpenStreetMap for the area between your points. A graph is built
+                        where intersections are nodes and street segments are weighted edges.</p>
+                    <p>The selected algorithm runs on this real road graph — <strong style="color:var(--text-3)">gray
+                            lines show the road network</strong>, <strong style="color:var(--clr-path)">yellow shows
+                            edges explored</strong>, <strong style="color:var(--clr-go)">green shows the final
+                            path</strong>.</p>
                     <p>Place points <strong>1–5 km apart</strong> for best results.</p>
                 </div>
             </aside>
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}?v=6"></script>
-    <script src="{{ url_for('static', filename='map.js') }}?v=6"></script>
+    <script src="{{ url_for('static', filename='script.js') }}?v=7"></script>
+    <script src="{{ url_for('static', filename='map.js') }}?v=7"></script>
 </body>
+
 </html>

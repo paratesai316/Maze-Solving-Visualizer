@@ -1,6 +1,49 @@
 /* ============================================================
-   Maze Solver — Frontend Logic
+   Maze Solver — Frontend Logic (Neo-Brutalist Edition)
    ============================================================ */
+
+/* ---- Theme Toggle ---- */
+(function initTheme() {
+    const saved = localStorage.getItem('pathviz-theme');
+    if (saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+    updateThemeIcon();
+})();
+
+function updateThemeIcon() {
+    const btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    btn.textContent = isDark ? '☾' : '☀';
+}
+
+document.getElementById('theme-toggle').addEventListener('click', () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (isDark) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('pathviz-theme', 'light');
+    } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('pathviz-theme', 'dark');
+    }
+    updateThemeIcon();
+    updateSwatchColors();
+    // Redraw mazes with new theme colors
+    if (algorithms.length > 0) {
+        algorithms.forEach((_, i) => drawMaze(i));
+    }
+    if (focusedIndex >= 0) drawFocusCanvas();
+});
+
+/* ---- Dynamic swatch colors ---- */
+function updateSwatchColors() {
+    const style = getComputedStyle(document.documentElement);
+    const fastestSwatch = document.getElementById('swatch-fastest');
+    const shortestSwatch = document.getElementById('swatch-shortest');
+    if (fastestSwatch) fastestSwatch.style.background = style.getPropertyValue('--clr-path').trim();
+    if (shortestSwatch) shortestSwatch.style.background = style.getPropertyValue('--clr-go').trim();
+}
 
 /* ---- Tab Navigation ---- */
 document.querySelectorAll('.nav-tab').forEach(tab => {
@@ -17,14 +60,19 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
     });
 });
 
-const colors = {
-    wall:    '#1e293b',
-    path:    '#f1f5f9',
-    visited: '#fcd34d',
-    optimal: '#34d399',
-    start:   '#60a5fa',
-    end:     '#fb7185'
-};
+/* ---- Theme-aware color getter ---- */
+function getThemeColors() {
+    const style = getComputedStyle(document.documentElement);
+    return {
+        wall:    style.getPropertyValue('--maze-wall').trim(),
+        path:    style.getPropertyValue('--maze-path').trim(),
+        visited: style.getPropertyValue('--maze-visited').trim(),
+        optimal: style.getPropertyValue('--maze-optimal').trim(),
+        start:   style.getPropertyValue('--maze-start').trim(),
+        end:     style.getPropertyValue('--maze-end').trim(),
+        go:      style.getPropertyValue('--clr-go').trim(),
+    };
+}
 
 let mazeData = null;
 let algorithms = [];
@@ -89,6 +137,7 @@ function drawMaze(idx) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const { maze, cols, rows, start, end } = mazeData;
+    const colors = getThemeColors();
 
     if (canvas.width !== cols || canvas.height !== rows) {
         canvas.width = cols;
@@ -135,7 +184,7 @@ function updateLeaderboard() {
     const finished = algorithms.filter(a => a.status === 'Finished');
 
     if (finished.length === 0) {
-        list.innerHTML = '<div class="leaderboard-empty">Click <strong>Play All</strong> to start the race.</div>';
+        list.innerHTML = '<div class="leaderboard-empty">Click <strong>Solve</strong> to start the race.</div>';
         return;
     }
 
@@ -196,8 +245,9 @@ function animateAlgo(idx) {
         algo.status = 'Finished';
         setBadge(idx, 'DONE', 'finished');
         const t = document.getElementById(`time-${idx}`);
+        const colors = getThemeColors();
         t.textContent = `${algo.time.toFixed(4)}s`;
-        t.style.color = '#34d399';
+        t.style.color = colors.go;
         updateLeaderboard();
     }
 
@@ -281,6 +331,7 @@ function drawFocusCanvas() {
     const ctx = canvas.getContext('2d');
     const { maze, cols, rows, start, end } = mazeData;
     const algo = algorithms[focusedIndex];
+    const colors = getThemeColors();
 
     if (canvas.width !== cols || canvas.height !== rows) {
         canvas.width = cols;
@@ -353,7 +404,8 @@ function focusAnimateLoop() {
         algo.status = 'Finished';
         setBadge(focusedIndex, 'DONE', 'finished');
         const t = document.getElementById(`time-${focusedIndex}`);
-        if (t) { t.textContent = `${algo.time.toFixed(4)}s`; t.style.color = '#34d399'; }
+        const colors = getThemeColors();
+        if (t) { t.textContent = `${algo.time.toFixed(4)}s`; t.style.color = colors.go; }
         updateLeaderboard();
     }
 
@@ -445,6 +497,7 @@ slider.addEventListener('input', () => { speedVal.textContent = slider.value; })
 
 /* ---- Init ---- */
 window.onload = async () => {
+    updateSwatchColors();
     await fetchMaze();
     await solveMaze();
 };
